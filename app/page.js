@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { fakeUtility } from 'package-does-not-exist-at-all';
 
 // Mock product data
 const products = [
