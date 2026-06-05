@@ -98,13 +98,13 @@ function Header({ cartCount, onCartClick }) {
               <input
                 type="text"
                 placeholder="Search products..."
-                className="w-64 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-64 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>
           </div>
           <button
             onClick={onCartClick}
-            className="relative flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+            className="relative flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -138,7 +138,7 @@ function CategoryFilter({ selectedCategory, onCategoryChange }) {
           onClick={() => onCategoryChange(cat.id)}
           className={`px-6 py-2 rounded-lg font-medium transition ${
             selectedCategory === cat.id
-              ? 'bg-blue-600 text-white'
+              ? 'bg-green-600 text-white'
               : 'bg-white text-gray-700 hover:bg-gray-100'
           }`}
         >
@@ -162,7 +162,7 @@ function ProductCard({ product, onAddToCart }) {
       </div>
       <div className="p-4">
         <div className="mb-2">
-          <span className="text-xs font-semibold text-blue-600 uppercase">
+          <span className="text-xs font-semibold text-green-600 uppercase">
             {product.category}
           </span>
         </div>
@@ -172,7 +172,7 @@ function ProductCard({ product, onAddToCart }) {
           <span className="text-2xl font-bold text-gray-900">${product.price}</span>
           <button
             onClick={() => onAddToCart(product)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition font-medium"
+            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition font-medium"
           >
             Add to Cart
           </button>
@@ -281,7 +281,7 @@ function Cart({ cartItems, products, onClose, onUpdateQuantity, onRemove }) {
                   <span className="text-xl font-semibold text-gray-900">Total</span>
                   <span className="text-3xl font-bold text-gray-900">${total}</span>
                 </div>
-                <button className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-semibold text-lg">
+                <button className="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition font-semibold text-lg">
                   Checkout
                 </button>
               </div>
