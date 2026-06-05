@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { FakeComponent } from 'nonexistent-package-xyz-123';
 
 // Mock product data
 const products = [
