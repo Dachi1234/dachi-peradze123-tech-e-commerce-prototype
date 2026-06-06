@@ -1,90 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-
-// Mock product data
-const products = [
-  {
-    id: 1,
-    name: 'iPhone 15 Pro',
-    category: 'phone',
-    price: 999,
-    image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400&h=400&fit=crop',
-    description: 'Latest iPhone with A17 Pro chip'
-  },
-  {
-    id: 2,
-    name: 'Samsung Galaxy S24 Ultra',
-    category: 'phone',
-    price: 1199,
-    image: 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=400&h=400&fit=crop',
-    description: 'Premium Android flagship'
-  },
-  {
-    id: 3,
-    name: 'Google Pixel 8 Pro',
-    category: 'phone',
-    price: 899,
-    image: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=400&h=400&fit=crop',
-    description: 'Pure Android experience with AI features'
-  },
-  {
-    id: 4,
-    name: 'MacBook Pro 16"',
-    category: 'laptop',
-    price: 2499,
-    image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=400&fit=crop',
-    description: 'Powerful M3 Pro chip for professionals'
-  },
-  {
-    id: 5,
-    name: 'Lenovo ThinkPad X1 Carbon',
-    category: 'laptop',
-    price: 1699,
-    image: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=400&h=400&fit=crop',
-    description: 'Business-class ultrabook'
-  },
-  {
-    id: 6,
-    name: 'Dell XPS 15',
-    category: 'laptop',
-    price: 1899,
-    image: 'https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?w=400&h=400&fit=crop',
-    description: 'Stunning 4K display and performance'
-  },
-  {
-    id: 7,
-    name: 'iPhone 15',
-    category: 'phone',
-    price: 799,
-    image: 'https://images.unsplash.com/photo-1592286927505-c80e8c6e8e2a?w=400&h=400&fit=crop',
-    description: 'Excellent value flagship phone'
-  },
-  {
-    id: 8,
-    name: 'OnePlus 12',
-    category: 'phone',
-    price: 799,
-    image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop',
-    description: 'Flagship killer with fast charging'
-  },
-  {
-    id: 9,
-    name: 'HP Spectre x360',
-    category: 'laptop',
-    price: 1599,
-    image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=400&fit=crop',
-    description: 'Premium 2-in-1 convertible'
-  },
-  {
-    id: 10,
-    name: 'ASUS ROG Zephyrus',
-    category: 'laptop',
-    price: 2299,
-    image: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=400&h=400&fit=crop',
-    description: 'Gaming powerhouse laptop'
-  }
-];
+import { useState, useEffect } from 'react';
+import { StarDisplay, StarInput } from '@/components/StarRating';
 
 // Header Component
 function Header({ cartCount, onCartClick }) {
@@ -150,12 +67,26 @@ function CategoryFilter({ selectedCategory, onCategoryChange }) {
 }
 
 // Product Card Component
-function ProductCard({ product, onAddToCart }) {
+function ProductCard({ product, onAddToCart, onRatingSubmit }) {
+  const [showRatingInput, setShowRatingInput] = useState(false);
+  const [selectedRating, setSelectedRating] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleRatingSubmit = async () => {
+    if (selectedRating === 0) return;
+
+    setIsSubmitting(true);
+    await onRatingSubmit(product.id, selectedRating);
+    setIsSubmitting(false);
+    setShowRatingInput(false);
+    setSelectedRating(0);
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition">
       <div className="aspect-square bg-gray-100">
         <img
-          src={product.image}
+          src={product.imageUrl}
           alt={product.name}
           className="w-full h-full object-cover"
         />
@@ -168,6 +99,46 @@ function ProductCard({ product, onAddToCart }) {
         </div>
         <h3 className="text-lg font-semibold text-gray-900 mb-1">{product.name}</h3>
         <p className="text-sm text-gray-600 mb-3">{product.description}</p>
+
+        {/* Rating Display */}
+        <div className="mb-3">
+          <StarDisplay rating={parseFloat(product.avgRating || 0)} count={parseInt(product.ratingCount || 0)} />
+          {!showRatingInput && (
+            <button
+              onClick={() => setShowRatingInput(true)}
+              className="text-green-600 text-sm hover:underline mt-1"
+            >
+              Rate this product
+            </button>
+          )}
+        </div>
+
+        {/* Rating Input */}
+        {showRatingInput && (
+          <div className="mb-3 p-3 bg-gray-50 rounded-lg">
+            <p className="text-sm font-medium text-gray-700 mb-2">Your rating:</p>
+            <StarInput value={selectedRating} onChange={setSelectedRating} />
+            <div className="flex space-x-2 mt-3">
+              <button
+                onClick={handleRatingSubmit}
+                disabled={selectedRating === 0 || isSubmitting}
+                className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? 'Submitting...' : 'Submit'}
+              </button>
+              <button
+                onClick={() => {
+                  setShowRatingInput(false);
+                  setSelectedRating(0);
+                }}
+                className="bg-gray-200 text-gray-700 px-3 py-1 rounded text-sm hover:bg-gray-300 transition"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+
         <div className="flex items-center justify-between">
           <span className="text-2xl font-bold text-gray-900">${product.price}</span>
           <button
@@ -183,7 +154,7 @@ function ProductCard({ product, onAddToCart }) {
 }
 
 // Product Grid Component
-function ProductGrid({ products, onAddToCart }) {
+function ProductGrid({ products, onAddToCart, onRatingSubmit }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {products.map(product => (
@@ -191,6 +162,7 @@ function ProductGrid({ products, onAddToCart }) {
           key={product.id}
           product={product}
           onAddToCart={onAddToCart}
+          onRatingSubmit={onRatingSubmit}
         />
       ))}
     </div>
@@ -239,7 +211,7 @@ function Cart({ cartItems, products, onClose, onUpdateQuantity, onRemove }) {
                   return (
                     <div key={item.productId} className="flex items-center space-x-4 border-b pb-4">
                       <img
-                        src={product.image}
+                        src={product.imageUrl}
                         alt={product.name}
                         className="w-20 h-20 object-cover rounded"
                       />
@@ -293,11 +265,42 @@ function Cart({ cartItems, products, onClose, onUpdateQuantity, onRemove }) {
   );
 }
 
+// Generate a simple user identifier (for demo purposes)
+function getUserIdentifier() {
+  if (typeof window === 'undefined') return 'anonymous';
+
+  let userId = localStorage.getItem('user_id');
+  if (!userId) {
+    userId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    localStorage.setItem('user_id', userId);
+  }
+  return userId;
+}
+
 // Main App Component
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [cartItems, setCartItems] = useState([]);
   const [showCart, setShowCart] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch products on mount
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const response = await fetch('/api/products');
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProducts();
+  }, []);
 
   const filteredProducts = selectedCategory === 'all'
     ? products
@@ -337,6 +340,42 @@ export default function Home() {
     setCartItems(prevItems => prevItems.filter(item => item.productId !== productId));
   };
 
+  const handleRatingSubmit = async (productId, stars) => {
+    try {
+      const response = await fetch('/api/ratings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          product_id: productId,
+          stars: stars,
+          user_identifier: getUserIdentifier(),
+        }),
+      });
+
+      if (response.ok) {
+        // Refetch products to update the average rating
+        const productsResponse = await fetch('/api/products');
+        const updatedProducts = await productsResponse.json();
+        setProducts(updatedProducts);
+      }
+    } catch (error) {
+      console.error('Error submitting rating:', error);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-green-600 border-t-transparent"></div>
+          <p className="mt-4 text-gray-600">Loading products...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header cartCount={cartCount} onCartClick={() => setShowCart(true)} />
@@ -350,6 +389,7 @@ export default function Home() {
         <ProductGrid
           products={filteredProducts}
           onAddToCart={handleAddToCart}
+          onRatingSubmit={handleRatingSubmit}
         />
       </main>
 
