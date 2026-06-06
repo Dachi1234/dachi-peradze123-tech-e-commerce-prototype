@@ -2,9 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import { StarDisplay, StarInput } from '@/components/StarRating';
+import { AuthProvider, useAuth } from '@/components/AuthContext';
+import { AuthModal } from '@/components/AuthModal';
 
 // Header Component
-function Header({ cartCount, onCartClick }) {
+function Header({ cartCount, onCartClick, onLoginClick, onRegisterClick }) {
+  const { user, logout } = useAuth();
+
   return (
     <header className="bg-white shadow-sm sticky top-0 z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -19,20 +23,50 @@ function Header({ cartCount, onCartClick }) {
               />
             </div>
           </div>
-          <button
-            onClick={onCartClick}
-            className="relative flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-            <span>Cart</span>
-            {cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
-                {cartCount}
-              </span>
+          <div className="flex items-center space-x-4">
+            {user ? (
+              <>
+                <span className="text-gray-700">
+                  Hello, <span className="font-semibold">{user.username}</span>
+                </span>
+                <button
+                  onClick={logout}
+                  className="text-gray-600 hover:text-gray-900 transition"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={onLoginClick}
+                  className="text-gray-600 hover:text-gray-900 transition"
+                >
+                  Login
+                </button>
+                <button
+                  onClick={onRegisterClick}
+                  className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+                >
+                  Register
+                </button>
+              </>
             )}
-          </button>
+            <button
+              onClick={onCartClick}
+              className="relative flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              <span>Cart</span>
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </header>
@@ -67,7 +101,8 @@ function CategoryFilter({ selectedCategory, onCategoryChange }) {
 }
 
 // Product Card Component
-function ProductCard({ product, onAddToCart, onRatingSubmit }) {
+function ProductCard({ product, onAddToCart, onRatingSubmit, onLoginClick }) {
+  const { user } = useAuth();
   const [showRatingInput, setShowRatingInput] = useState(false);
   const [selectedRating, setSelectedRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -80,6 +115,14 @@ function ProductCard({ product, onAddToCart, onRatingSubmit }) {
     setIsSubmitting(false);
     setShowRatingInput(false);
     setSelectedRating(0);
+  };
+
+  const handleRateClick = () => {
+    if (!user) {
+      onLoginClick();
+    } else {
+      setShowRatingInput(true);
+    }
   };
 
   return (
@@ -105,10 +148,10 @@ function ProductCard({ product, onAddToCart, onRatingSubmit }) {
           <StarDisplay rating={parseFloat(product.avgRating || 0)} count={parseInt(product.ratingCount || 0)} />
           {!showRatingInput && (
             <button
-              onClick={() => setShowRatingInput(true)}
+              onClick={handleRateClick}
               className="text-green-600 text-sm hover:underline mt-1"
             >
-              Rate this product
+              {user ? 'Rate this product' : 'Login to rate'}
             </button>
           )}
         </div>
@@ -154,7 +197,7 @@ function ProductCard({ product, onAddToCart, onRatingSubmit }) {
 }
 
 // Product Grid Component
-function ProductGrid({ products, onAddToCart, onRatingSubmit }) {
+function ProductGrid({ products, onAddToCart, onRatingSubmit, onLoginClick }) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {products.map(product => (
@@ -163,6 +206,7 @@ function ProductGrid({ products, onAddToCart, onRatingSubmit }) {
           product={product}
           onAddToCart={onAddToCart}
           onRatingSubmit={onRatingSubmit}
+          onLoginClick={onLoginClick}
         />
       ))}
     </div>
@@ -265,23 +309,13 @@ function Cart({ cartItems, products, onClose, onUpdateQuantity, onRemove }) {
   );
 }
 
-// Generate a simple user identifier (for demo purposes)
-function getUserIdentifier() {
-  if (typeof window === 'undefined') return 'anonymous';
-
-  let userId = localStorage.getItem('user_id');
-  if (!userId) {
-    userId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    localStorage.setItem('user_id', userId);
-  }
-  return userId;
-}
-
-// Main App Component
-export default function Home() {
+// Home Content Component
+function HomeContent() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [cartItems, setCartItems] = useState([]);
   const [showCart, setShowCart] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authMode, setAuthMode] = useState('login');
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -350,7 +384,6 @@ export default function Home() {
         body: JSON.stringify({
           product_id: productId,
           stars: stars,
-          user_identifier: getUserIdentifier(),
         }),
       });
 
@@ -359,10 +392,24 @@ export default function Home() {
         const productsResponse = await fetch('/api/products');
         const updatedProducts = await productsResponse.json();
         setProducts(updatedProducts);
+      } else if (response.status === 401) {
+        // User not authenticated
+        setAuthMode('login');
+        setShowAuthModal(true);
       }
     } catch (error) {
       console.error('Error submitting rating:', error);
     }
+  };
+
+  const handleLoginClick = () => {
+    setAuthMode('login');
+    setShowAuthModal(true);
+  };
+
+  const handleRegisterClick = () => {
+    setAuthMode('register');
+    setShowAuthModal(true);
   };
 
   if (loading) {
@@ -378,7 +425,12 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header cartCount={cartCount} onCartClick={() => setShowCart(true)} />
+      <Header
+        cartCount={cartCount}
+        onCartClick={() => setShowCart(true)}
+        onLoginClick={handleLoginClick}
+        onRegisterClick={handleRegisterClick}
+      />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <CategoryFilter
@@ -390,6 +442,7 @@ export default function Home() {
           products={filteredProducts}
           onAddToCart={handleAddToCart}
           onRatingSubmit={handleRatingSubmit}
+          onLoginClick={handleLoginClick}
         />
       </main>
 
@@ -402,6 +455,21 @@ export default function Home() {
           onRemove={handleRemove}
         />
       )}
+
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        mode={authMode}
+      />
     </div>
+  );
+}
+
+// Main export with AuthProvider wrapper
+export default function Home() {
+  return (
+    <AuthProvider>
+      <HomeContent />
+    </AuthProvider>
   );
 }

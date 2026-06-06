@@ -2,10 +2,9 @@
   "name": "tech-ecommerce-prototype",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "node lib/migrate.js && node lib/seed.js && next build",
+    "build": "drizzle-kit migrate && next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -14,7 +13,9 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "@neondatabase/serverless": "^0.10.4",
-    "drizzle-orm": "^0.38.0"
+    "drizzle-orm": "^0.38.0",
+    "bcryptjs": "^2.4.3",
+    "jose": "^5.2.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
