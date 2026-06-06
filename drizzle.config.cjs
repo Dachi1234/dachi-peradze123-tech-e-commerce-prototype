@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   schema: './lib/schema.js',
   out: './drizzle',
   dialect: 'postgresql',
