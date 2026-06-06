@@ -1,6 +1,6 @@
 'use client';
 
-export function StarDisplay({ rating, count }) {
+export function StarDisplay({ rating, count, showCount = true }) {
   const stars = [];
   const fullStars = Math.floor(rating);
   const hasHalfStar = rating % 1 >= 0.5;
@@ -37,7 +37,7 @@ export function StarDisplay({ rating, count }) {
   return (
     <div className="flex items-center space-x-1">
       {stars}
-      {count > 0 && (
+      {showCount && count > 0 && (
         <span className="text-sm text-gray-600 ml-2">({count})</span>
       )}
     </div>

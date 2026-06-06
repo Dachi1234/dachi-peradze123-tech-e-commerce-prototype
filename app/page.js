@@ -29,6 +29,12 @@ function Header({ cartCount, onCartClick, onLoginClick, onRegisterClick }) {
                 <span className="text-gray-700">
                   Hello, <span className="font-semibold">{user.username}</span>
                 </span>
+                <a
+                  href="/profile"
+                  className="text-gray-600 hover:text-gray-900 transition"
+                >
+                  Profile
+                </a>
                 <button
                   onClick={logout}
                   className="text-gray-600 hover:text-gray-900 transition"
