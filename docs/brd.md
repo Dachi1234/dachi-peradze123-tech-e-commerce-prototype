@@ -1,155 +1,95 @@
-# Business Requirements Document  
-**TechStore E-Commerce Prototype**
+# BRD: User Authorization System
 
-**Version:** 1.1  
+**Document Version:** 1.0  
 **Date:** June 19, 2026  
-**Author:** Salome Khachidze  
-**Scope:** Authentication & Product Ratings
+**Author:** Salome Khachidze
 
 ---
 
 ## 1. Goals
 
-Provide TechStore with a simple, functional authentication system and a product rating feature so users can create accounts, log in, and rate products (phones & laptops). This BRD defines the minimum requirements for these two features to guide development without scope creep.
+Provide a secure username/password authentication system that allows users to register, log in, and maintain authenticated sessions.
 
 ---
 
 ## 2. Users
 
-**Primary user:**  
-- Age: 18–45  
-- Tech-savvy consumers shopping for phones and laptops  
-- Expects standard e-commerce login/registration flows  
-- Wants to see product ratings and contribute their own ratings after purchase or evaluation
+**Primary user:** Any visitor to the application who wants to create an account and access authenticated features.
 
 ---
 
 ## 3. User Stories
 
-**As a visitor**, I want to register for an account so I can rate products.  
-**As a visitor**, I want to log in to my existing account so I can access rating features.  
-**As a logged-in user**, I want to rate a product (1–5 stars) so I can share my opinion.  
-**As any visitor**, I want to see product ratings so I can make informed purchase decisions.
+- As a new visitor, I want to register with a username and password so I can create an account
+- As a registered user, I want to log in with my credentials so I can access my account
+- As a logged-in user, I want to log out so I can end my session securely
 
 ---
 
 ## 4. Functional Requirements
 
-### 4.1 User Registration
+### 4.1 Registration
+- System accepts username (minimum 3 characters) and password (minimum 8 characters)
+- System validates username uniqueness
+- System stores password securely (hashed)
+- System creates user account on successful validation
+- System redirects user to login after registration
 
-- User can register with **username** and **password** only.
-- No email field required.
-- No email verification step.
-- Username must be unique across the system.
-- Password must be at least 6 characters (basic validation).
-- After successful registration, user is **automatically logged in** and redirected to the homepage.
-- If registration fails (e.g., username already exists), show clear error message.
+### 4.2 Login
+- System accepts username and password
+- System validates credentials against stored records
+- System creates authenticated session on successful login
+- System returns error message on failed login
+- System redirects authenticated user to home/dashboard
 
-### 4.2 User Login
+### 4.3 Logout
+- System terminates authenticated session
+- System redirects user to login page
 
-- User can log in with **username** and **password**.
-- Successful login creates a session that persists across page reloads.
-- Failed login shows an error message ("Invalid username or password").
-- After successful login, user is redirected to the homepage.
-
-### 4.3 Product Ratings
-
-- **Only registered and logged-in users** can submit a product rating.
-- **All visitors** (logged in or not) can **view** product ratings.
-- Each user can submit **one rating per product** (1–5 stars).
-- If a user has already rated a product, they cannot rate it again (show message: "You have already rated this product").
-- Product page displays the **average rating** and **total number of ratings**.
-- Ratings are visible immediately after submission (no approval workflow).
+### 4.4 Session Management
+- System maintains session state across page navigation
+- System expires sessions after 24 hours of inactivity
+- System validates session on each protected route access
 
 ---
 
 ## 5. Non-Functional Requirements
 
-### 5.1 Performance
-- Login and registration flows should complete within 2 seconds under normal network conditions.
-- Ratings should update on the product page within 1 second of submission.
-
-### 5.2 Security (deferred)
-- Passwords stored in plain text or minimal hashing is acceptable **for this prototype phase**.
-- Full security hardening (bcrypt, HTTPS enforcement, CSRF protection, rate limiting) is **postponed to a later phase**.
-
-### 5.3 User Roles
-- No user role system (admin, customer, etc.) in this phase.
-- All registered users have identical permissions.
+- Password hashing using industry-standard algorithm (bcrypt recommended)
+- Session tokens stored securely (httpOnly cookies)
+- Form validation provides immediate feedback
+- Authentication response time < 2 seconds
 
 ---
 
 ## 6. Out of Scope
 
-The following features are **explicitly excluded** from this BRD to prevent scope creep:
-
-- Cart functionality  
-- Checkout and payment flows  
-- Product search and filtering improvements  
-- User profile management (profile page, edit account, delete account)  
-- Password recovery ("Forgot password")  
-- Email notifications  
-- Social login (Google, Facebook, etc.)  
-- User reviews (text-based feedback, only star ratings are in scope)  
-- Admin dashboard  
+- Email verification
+- Password reset / forgot password
+- Social login (Google, Facebook, etc.)
+- Two-factor authentication
+- User roles and permissions
+- Profile management
 
 ---
 
-## 7. Assumptions
+## 7. Acceptance Criteria
 
-- The frontend UI for login, registration, and rating forms already exists or will be built by Giorgi.
-- A database (or equivalent data store) is available to persist users and ratings.
-- Session management is handled via cookies or local storage (implementation detail left to developer).
-
----
-
-## 8. Edge Cases
-
-### 8.1 Authentication Edge Cases
-
-- **Duplicate registration attempt**: If a username already exists, registration fails with error message "Username already exists".
-- **Empty fields**: If username or password is empty during registration or login, show error message "All fields are required".
-- **Session expiration**: If session expires while user is browsing, redirect to login page when they attempt a protected action (e.g., submitting a rating).
-- **Logout**: User can log out, which clears the session. Attempting to access protected features after logout redirects to login.
-- **Invalid password length**: Password shorter than 6 characters is rejected during registration with error message "Password must be at least 6 characters".
-
-### 8.2 Rating Edge Cases
-
-- **Duplicate rating attempt**: If a logged-in user tries to rate a product they've already rated, show message "You have already rated this product" and do not accept the new rating.
-- **Rating while not logged in**: If a non-logged-in user attempts to rate a product, show message "Please log in to rate products" and redirect to login page.
-- **Deleted or non-existent product**: If a user tries to rate a product that no longer exists in the database, show error message "Product not found".
-- **Rating value out of range**: Only accept ratings between 1 and 5 stars. Reject any value outside this range.
-- **Product with zero ratings**: If a product has no ratings yet, display "No ratings yet" on the product page instead of attempting to calculate an average.
+- [ ] User can register with valid username/password
+- [ ] User cannot register with duplicate username
+- [ ] User can log in with correct credentials
+- [ ] User cannot log in with incorrect credentials
+- [ ] Logged-in user can access protected routes
+- [ ] Non-logged-in user is redirected to login when accessing protected routes
+- [ ] User can log out and session is terminated
+- [ ] Passwords are stored hashed, never in plain text
 
 ---
 
-## 9. Open Questions
+## 8. Open Questions
 
-*(None at this time — scope is clear.)*
-
----
-
-## 10. Acceptance Criteria
-
-### Registration
-- [ ] User can submit username + password and create an account  
-- [ ] Duplicate username is rejected with an error message  
-- [ ] User is auto-logged-in after registration  
-- [ ] User is redirected to homepage after registration  
-
-### Login
-- [ ] User can log in with valid username + password  
-- [ ] Invalid credentials show error message  
-- [ ] Session persists across page reloads  
-- [ ] User is redirected to homepage after login  
-
-### Ratings
-- [ ] Only logged-in users see the "rate this product" interface  
-- [ ] User can submit a rating (1–5 stars) on a product  
-- [ ] User cannot rate the same product twice  
-- [ ] All visitors can see average rating and total rating count on product page  
-- [ ] Rating updates are visible immediately after submission  
+None — test document for ClickUp upload verification.
 
 ---
 
-**End of Document**
+**END OF DOCUMENT**
