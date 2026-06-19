@@ -1,95 +1,70 @@
-# BRD: User Authorization System
+# BRD: User Logout
 
-**Document Version:** 1.0  
-**Date:** June 19, 2026  
-**Author:** Salome Khachidze
+**Project:** TechStore E-Commerce Prototype  
+**Feature:** User Logout Functionality  
+**Version:** 1.0  
+**Date:** June 19, 2026
 
 ---
 
-## 1. Goals
+## 1. Goal
 
-Provide a secure username/password authentication system that allows users to register, log in, and maintain authenticated sessions.
+Enable authenticated users to log out of their session and return to a non-authenticated state.
 
 ---
 
 ## 2. Users
 
-**Primary user:** Any visitor to the application who wants to create an account and access authenticated features.
+- **Authenticated TechStore Users**: Any registered user who is currently logged in.
 
 ---
 
-## 3. User Stories
+## 3. User Story
 
-- As a new visitor, I want to register with a username and password so I can create an account
-- As a registered user, I want to log in with my credentials so I can access my account
-- As a logged-in user, I want to log out so I can end my session securely
+**As a** logged-in TechStore user  
+**I want to** log out of my account  
+**So that** my session is ended and no one else can access my account from this device.
 
 ---
 
 ## 4. Functional Requirements
 
-### 4.1 Registration
-- System accepts username (minimum 3 characters) and password (minimum 8 characters)
-- System validates username uniqueness
-- System stores password securely (hashed)
-- System creates user account on successful validation
-- System redirects user to login after registration
+### 4.1 Logout Action
+- A "Log Out" button/link shall be visible to authenticated users (e.g., in the header/nav).
+- Clicking "Log Out" shall immediately end the user's session.
 
-### 4.2 Login
-- System accepts username and password
-- System validates credentials against stored records
-- System creates authenticated session on successful login
-- System returns error message on failed login
-- System redirects authenticated user to home/dashboard
+### 4.2 Session Termination
+- The user's authentication token/session shall be invalidated on logout.
+- The user shall be redirected to the homepage (or login page) after logout.
 
-### 4.3 Logout
-- System terminates authenticated session
-- System redirects user to login page
-
-### 4.4 Session Management
-- System maintains session state across page navigation
-- System expires sessions after 24 hours of inactivity
-- System validates session on each protected route access
+### 4.3 Post-Logout State
+- After logout, the user shall no longer have access to authenticated-only features (e.g., submitting ratings).
+- If the user navigates to a protected page after logout, they shall be prompted to log in.
 
 ---
 
 ## 5. Non-Functional Requirements
 
-- Password hashing using industry-standard algorithm (bcrypt recommended)
-- Session tokens stored securely (httpOnly cookies)
-- Form validation provides immediate feedback
-- Authentication response time < 2 seconds
+- Logout shall complete within 1 second under normal conditions.
+- The logout action shall be clearly labeled and accessible from all authenticated pages.
 
 ---
 
 ## 6. Out of Scope
 
-- Email verification
-- Password reset / forgot password
-- Social login (Google, Facebook, etc.)
-- Two-factor authentication
-- User roles and permissions
-- Profile management
+- "Log out from all devices" functionality
+- Logout confirmation dialog
+- Session timeout / auto-logout
 
 ---
 
 ## 7. Acceptance Criteria
 
-- [ ] User can register with valid username/password
-- [ ] User cannot register with duplicate username
-- [ ] User can log in with correct credentials
-- [ ] User cannot log in with incorrect credentials
-- [ ] Logged-in user can access protected routes
-- [ ] Non-logged-in user is redirected to login when accessing protected routes
-- [ ] User can log out and session is terminated
-- [ ] Passwords are stored hashed, never in plain text
+- [ ] Authenticated users can see and click a "Log Out" button.
+- [ ] Clicking "Log Out" ends the session and redirects the user.
+- [ ] After logout, the user cannot access authenticated-only features without logging in again.
+- [ ] Logout completes successfully with no errors.
 
 ---
 
-## 8. Open Questions
-
-None — test document for ClickUp upload verification.
-
----
-
-**END OF DOCUMENT**
+**End of Document**
