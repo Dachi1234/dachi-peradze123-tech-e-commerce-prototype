@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { AuthProvider, useAuth } from '@/components/AuthContext';
+import { useAuth } from '@/components/AuthContext';
 import { StarDisplay } from '@/components/StarRating';
 
 function ProfileHeader({ username }) {
@@ -195,9 +195,5 @@ function ProfileContent() {
 }
 
 export default function ProfilePage() {
-  return (
-    <AuthProvider>
-      <ProfileContent />
-    </AuthProvider>
-  );
+  return <ProfileContent />;
 }

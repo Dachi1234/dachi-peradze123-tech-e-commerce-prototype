@@ -15,6 +15,13 @@
       "when": 1717689600000,
       "tag": "0001_add_users_auth",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1731024000000,
+      "tag": "0002_add_cart",
+      "breakpoints": true
     }
   ]
 }

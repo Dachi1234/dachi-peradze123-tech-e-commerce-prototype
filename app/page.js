@@ -1,13 +1,18 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { StarDisplay, StarInput } from '@/components/StarRating';
-import { AuthProvider, useAuth } from '@/components/AuthContext';
+import { useAuth } from '@/components/AuthContext';
+import { useCart } from '@/components/CartContext';
+import { useToast } from '@/components/Toast';
 import { AuthModal } from '@/components/AuthModal';
 
 // Header Component
-function Header({ cartCount, onCartClick, onLoginClick, onRegisterClick }) {
+function Header({ onLoginClick, onRegisterClick }) {
   const { user, logout } = useAuth();
+  const { count } = useCart();
+  const router = useRouter();
 
   return (
     <header className="bg-white shadow-sm sticky top-0 z-10">
@@ -26,7 +31,7 @@ function Header({ cartCount, onCartClick, onLoginClick, onRegisterClick }) {
           <div className="flex items-center space-x-4">
             {user ? (
               <>
-                <span className="text-gray-700">
+                <span className="text-gray-700 hidden sm:inline">
                   Hello, <span className="font-semibold">{user.username}</span>
                 </span>
                 <a
@@ -59,16 +64,23 @@ function Header({ cartCount, onCartClick, onLoginClick, onRegisterClick }) {
               </>
             )}
             <button
-              onClick={onCartClick}
+              onClick={() => {
+                if (!user) {
+                  router.push('/login?redirect=/cart');
+                  return;
+                }
+                router.push('/cart');
+              }}
               className="relative flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+              aria-label="View cart"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
               <span>Cart</span>
-              {cartCount > 0 && (
+              {count > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
-                  {cartCount}
+                  {count}
                 </span>
               )}
             </button>
@@ -112,6 +124,7 @@ function ProductCard({ product, onAddToCart, onRatingSubmit, onLoginClick }) {
   const [showRatingInput, setShowRatingInput] = useState(false);
   const [selectedRating, setSelectedRating] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [adding, setAdding] = useState(false);
 
   const handleRatingSubmit = async () => {
     if (selectedRating === 0) return;
@@ -128,6 +141,15 @@ function ProductCard({ product, onAddToCart, onRatingSubmit, onLoginClick }) {
       onLoginClick();
     } else {
       setShowRatingInput(true);
+    }
+  };
+
+  const handleAdd = async () => {
+    setAdding(true);
+    try {
+      await onAddToCart(product);
+    } finally {
+      setAdding(false);
     }
   };
 
@@ -191,10 +213,11 @@ function ProductCard({ product, onAddToCart, onRatingSubmit, onLoginClick }) {
         <div className="flex items-center justify-between">
           <span className="text-2xl font-bold text-gray-900">${product.price}</span>
           <button
-            onClick={() => onAddToCart(product)}
-            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition font-medium"
+            onClick={handleAdd}
+            disabled={adding}
+            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Add to Cart
+            {adding ? 'Adding...' : 'Add to Cart'}
           </button>
         </div>
       </div>
@@ -219,107 +242,13 @@ function ProductGrid({ products, onAddToCart, onRatingSubmit, onLoginClick }) {
   );
 }
 
-// Cart Component
-function Cart({ cartItems, products, onClose, onUpdateQuantity, onRemove }) {
-  const getProduct = (productId) => products.find(p => p.id === productId);
-
-  const total = cartItems.reduce((sum, item) => {
-    const product = getProduct(item.productId);
-    return sum + (product ? product.price * item.quantity : 0);
-  }, 0);
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end">
-      <div className="bg-white w-full max-w-md h-full shadow-xl overflow-y-auto">
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Shopping Cart</h2>
-            <button
-              onClick={onClose}
-              className="text-gray-500 hover:text-gray-700"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-
-          {cartItems.length === 0 ? (
-            <div className="text-center py-12">
-              <svg className="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
-              <p className="text-gray-500 text-lg">Your cart is empty</p>
-            </div>
-          ) : (
-            <>
-              <div className="space-y-4 mb-6">
-                {cartItems.map(item => {
-                  const product = getProduct(item.productId);
-                  if (!product) return null;
-
-                  return (
-                    <div key={item.productId} className="flex items-center space-x-4 border-b pb-4">
-                      <img
-                        src={product.imageUrl}
-                        alt={product.name}
-                        className="w-20 h-20 object-cover rounded"
-                      />
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900">{product.name}</h3>
-                        <p className="text-gray-600">${product.price}</p>
-                        <div className="flex items-center space-x-2 mt-2">
-                          <button
-                            onClick={() => onUpdateQuantity(item.productId, Math.max(0, item.quantity - 1))}
-                            className="w-8 h-8 flex items-center justify-center bg-gray-200 rounded hover:bg-gray-300"
-                          >
-                            -
-                          </button>
-                          <span className="w-8 text-center font-semibold">{item.quantity}</span>
-                          <button
-                            onClick={() => onUpdateQuantity(item.productId, item.quantity + 1)}
-                            className="w-8 h-8 flex items-center justify-center bg-gray-200 rounded hover:bg-gray-300"
-                          >
-                            +
-                          </button>
-                          <button
-                            onClick={() => onRemove(item.productId)}
-                            className="ml-4 text-red-600 hover:text-red-700 text-sm"
-                          >
-                            Remove
-                          </button>
-                        </div>
-                      </div>
-                      <div className="font-bold text-gray-900">
-                        ${product.price * item.quantity}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              <div className="border-t pt-6">
-                <div className="flex items-center justify-between mb-6">
-                  <span className="text-xl font-semibold text-gray-900">Total</span>
-                  <span className="text-3xl font-bold text-gray-900">${total}</span>
-                </div>
-                <button className="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition font-semibold text-lg">
-                  Checkout
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 // Home Content Component
-function HomeContent() {
+export default function Home() {
+  const router = useRouter();
+  const { user } = useAuth();
+  const { addToCart } = useCart();
+  const { showToast } = useToast();
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [cartItems, setCartItems] = useState([]);
-  const [showCart, setShowCart] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode] = useState('login');
   const [products, setProducts] = useState([]);
@@ -346,38 +275,18 @@ function HomeContent() {
     ? products
     : products.filter(p => p.category === selectedCategory);
 
-  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-
-  const handleAddToCart = (product) => {
-    setCartItems(prevItems => {
-      const existing = prevItems.find(item => item.productId === product.id);
-      if (existing) {
-        return prevItems.map(item =>
-          item.productId === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      return [...prevItems, { productId: product.id, quantity: 1 }];
-    });
-  };
-
-  const handleUpdateQuantity = (productId, newQuantity) => {
-    if (newQuantity === 0) {
-      handleRemove(productId);
-    } else {
-      setCartItems(prevItems =>
-        prevItems.map(item =>
-          item.productId === productId
-            ? { ...item, quantity: newQuantity }
-            : item
-        )
-      );
+  const handleAddToCart = async (product) => {
+    if (!user) {
+      // Redirect to login, return back to home so user can keep shopping
+      router.push(`/login?redirect=${encodeURIComponent('/')}`);
+      return;
     }
-  };
-
-  const handleRemove = (productId) => {
-    setCartItems(prevItems => prevItems.filter(item => item.productId !== productId));
+    try {
+      await addToCart(product.id, 1);
+      showToast(`Added "${product.name}" to cart`);
+    } catch (err) {
+      showToast(err.message || 'Failed to add to cart', 'error');
+    }
   };
 
   const handleRatingSubmit = async (productId, stars) => {
@@ -432,8 +341,6 @@ function HomeContent() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header
-        cartCount={cartCount}
-        onCartClick={() => setShowCart(true)}
         onLoginClick={handleLoginClick}
         onRegisterClick={handleRegisterClick}
       />
@@ -452,30 +359,11 @@ function HomeContent() {
         />
       </main>
 
-      {showCart && (
-        <Cart
-          cartItems={cartItems}
-          products={products}
-          onClose={() => setShowCart(false)}
-          onUpdateQuantity={handleUpdateQuantity}
-          onRemove={handleRemove}
-        />
-      )}
-
       <AuthModal
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
         mode={authMode}
       />
     </div>
-  );
-}
-
-// Main export with AuthProvider wrapper
-export default function Home() {
-  return (
-    <AuthProvider>
-      <HomeContent />
-    </AuthProvider>
   );
 }
