@@ -1,69 +1,80 @@
-# BRD: User Logout
+# BRD: Product Filter Feature
 
-**Project:** TechStore E-Commerce Prototype  
-**Feature:** User Logout Functionality  
+**Project:** TechStore  
 **Version:** 1.0  
 **Date:** June 19, 2026
 
 ---
 
-## 1. Goal
+## 1. Overview
 
-Enable authenticated users to log out of their session and return to a non-authenticated state.
-
----
-
-## 2. Users
-
-- **Authenticated TechStore Users**: Any registered user who is currently logged in.
+This document describes the product filtering functionality for the TechStore e-commerce prototype, enabling users to narrow down product listings based on category, price range, and brand.
 
 ---
 
-## 3. User Story
+## 2. Goals
 
-**As a** logged-in TechStore user  
-**I want to** log out of my account  
-**So that** my session is ended and no one else can access my account from this device.
+- Allow users to quickly find products that match their preferences
+- Reduce browsing time by filtering irrelevant products
+- Improve user experience on product listing pages
+
+---
+
+## 3. Users
+
+- **All visitors** (both logged-in and anonymous users)
 
 ---
 
 ## 4. Functional Requirements
 
-### 4.1 Logout Action
-- A "Log Out" button/link shall be visible to authenticated users (e.g., in the header/nav).
-- Clicking "Log Out" shall immediately end the user's session.
+### 4.1 Filter Types
+- **Category filter:** Phones, Laptops
+- **Price range filter:** Min/Max price inputs or slider
+- **Brand filter:** Multi-select checkboxes for available brands
 
-### 4.2 Session Termination
-- The user's authentication token/session shall be invalidated on logout.
-- The user shall be redirected to the homepage (or login page) after logout.
+### 4.2 Filter Behavior
+- Filters apply immediately when selected (no "Apply" button required)
+- Multiple filters work together (AND logic)
+- Product count updates as filters are applied
+- Filters persist during the session
 
-### 4.3 Post-Logout State
-- After logout, the user shall no longer have access to authenticated-only features (e.g., submitting ratings).
-- If the user navigates to a protected page after logout, they shall be prompted to log in.
-
----
-
-## 5. Non-Functional Requirements
-
-- Logout shall complete within 1 second under normal conditions.
-- The logout action shall be clearly labeled and accessible from all authenticated pages.
+### 4.3 Clear Filters
+- "Clear all filters" button resets to unfiltered state
+- Individual filter values can be deselected
 
 ---
 
-## 6. Out of Scope
+## 5. User Stories
 
-- "Log out from all devices" functionality
-- Logout confirmation dialog
-- Session timeout / auto-logout
+- As a visitor, I want to filter by category so I can see only phones or only laptops
+- As a visitor, I want to set a price range so I only see products I can afford
+- As a visitor, I want to filter by brand so I can compare products from specific manufacturers
 
 ---
 
-## 7. Acceptance Criteria
+## 6. Acceptance Criteria
 
-- [ ] Authenticated users can see and click a "Log Out" button.
-- [ ] Clicking "Log Out" ends the session and redirects the user.
-- [ ] After logout, the user cannot access authenticated-only features without logging in again.
-- [ ] Logout completes successfully with no errors.
+- [ ] Filter panel displays all available filter options
+- [ ] Selecting filters updates product list in real-time
+- [ ] Product count shows how many products match current filters
+- [ ] "Clear all" button removes all active filters
+- [ ] No results state displays when filters return zero products
+- [ ] Filter state persists when navigating between pages (within session)
+
+---
+
+## 7. Out of Scope
+
+- Save filter preferences across sessions
+- Share filtered URLs
+- Advanced sorting (by rating, popularity, etc.)
+
+---
+
+## 8. Open Questions
+
+None — testing scenario.
 
 ---
 
