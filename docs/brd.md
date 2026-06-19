@@ -1,8 +1,8 @@
 # Business Requirements Document  
 **TechStore E-Commerce Prototype**
 
-**Version:** 1.0  
-**Date:** June 7, 2026  
+**Version:** 1.1  
+**Date:** June 19, 2026  
 **Author:** Salome Khachidze  
 **Scope:** Authentication & Product Ratings
 
@@ -103,13 +103,33 @@ The following features are **explicitly excluded** from this BRD to prevent scop
 
 ---
 
-## 8. Open Questions
+## 8. Edge Cases
+
+### 8.1 Authentication Edge Cases
+
+- **Duplicate registration attempt**: If a username already exists, registration fails with error message "Username already exists".
+- **Empty fields**: If username or password is empty during registration or login, show error message "All fields are required".
+- **Session expiration**: If session expires while user is browsing, redirect to login page when they attempt a protected action (e.g., submitting a rating).
+- **Logout**: User can log out, which clears the session. Attempting to access protected features after logout redirects to login.
+- **Invalid password length**: Password shorter than 6 characters is rejected during registration with error message "Password must be at least 6 characters".
+
+### 8.2 Rating Edge Cases
+
+- **Duplicate rating attempt**: If a logged-in user tries to rate a product they've already rated, show message "You have already rated this product" and do not accept the new rating.
+- **Rating while not logged in**: If a non-logged-in user attempts to rate a product, show message "Please log in to rate products" and redirect to login page.
+- **Deleted or non-existent product**: If a user tries to rate a product that no longer exists in the database, show error message "Product not found".
+- **Rating value out of range**: Only accept ratings between 1 and 5 stars. Reject any value outside this range.
+- **Product with zero ratings**: If a product has no ratings yet, display "No ratings yet" on the product page instead of attempting to calculate an average.
+
+---
+
+## 9. Open Questions
 
 *(None at this time — scope is clear.)*
 
 ---
 
-## 9. Acceptance Criteria
+## 10. Acceptance Criteria
 
 ### Registration
 - [ ] User can submit username + password and create an account  
