@@ -94,6 +94,7 @@ function CartContent() {
   const { items, loading, updateQuantity, removeItem, clearCart } = useCart();
   const { showToast } = useToast();
   const [busy, setBusy] = useState(false);
+  const [confirmingClear, setConfirmingClear] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -130,7 +131,11 @@ function CartContent() {
   };
 
   const handleClear = async () => {
-    if (!confirm('Clear all items from your cart?')) return;
+    if (!confirmingClear) {
+      setConfirmingClear(true);
+      return;
+    }
+    setConfirmingClear(false);
     setBusy(true);
     try {
       await clearCart();
@@ -158,13 +163,33 @@ function CartContent() {
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-bold text-gray-900">Your Cart</h1>
           {items.length > 0 && (
-            <button
-              onClick={handleClear}
-              disabled={busy}
-              className="text-sm text-red-600 hover:text-red-700 font-medium disabled:opacity-50"
-            >
-              Clear cart
-            </button>
+            confirmingClear ? (
+              <div className="flex items-center space-x-2 text-sm">
+                <span className="text-gray-600">Clear all items?</span>
+                <button
+                  onClick={handleClear}
+                  disabled={busy}
+                  className="text-red-600 hover:text-red-700 font-medium disabled:opacity-50"
+                >
+                  Yes, clear
+                </button>
+                <button
+                  onClick={() => setConfirmingClear(false)}
+                  disabled={busy}
+                  className="text-gray-500 hover:text-gray-700 disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={handleClear}
+                disabled={busy}
+                className="text-sm text-red-600 hover:text-red-700 font-medium disabled:opacity-50"
+              >
+                Clear cart
+              </button>
+            )
           )}
         </div>
 

@@ -16,7 +16,7 @@ All foreign keys cascade on delete. Migrations live in `drizzle/0000_initial.sql
 
 ## Routes / pages
 - `app/page.js` — homepage product grid with category filter; "Add to Cart" hits the DB-backed cart (redirects logged-out users to `/login?redirect=/`)
-- `app/cart/page.js` — auth-gated cart page; list of items with qty controls, per-item remove, clear all, line subtotals and grand total
+- `app/cart/page.js` — auth-gated cart page; list of items with qty controls, per-item remove, clear-all (inline two-step confirm: click "Clear cart" → swaps in "Yes, clear" / "Cancel" buttons in-place; no `window.confirm()` since headless/strict-privacy browsers suppress it), line subtotals and grand total
 - `app/login/page.js` — standalone login/register page; reads `?redirect=<path>` and bounces the user there after auth
 - `app/profile/page.js` — user profile with the ratings they've submitted
 
