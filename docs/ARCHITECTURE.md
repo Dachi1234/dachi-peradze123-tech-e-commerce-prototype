@@ -32,7 +32,7 @@ All foreign keys cascade on delete. Migrations live in `drizzle/0000_initial.sql
 - `DELETE /api/cart/[itemId]` — remove single item
 
 ## Client state
-`app/layout.js` wraps everything in `Providers` (AuthProvider → CartProvider → ToastProvider). `useCart()` exposes `items`, `count`, `addToCart`, `updateQuantity`, `removeItem`, `clearCart`, `refresh`. The header's cart badge reads `count` so it stays in sync across pages.
+`app/layout.js` wraps everything in `Providers` (AuthProvider → CartProvider → ToastProvider). `useCart()` exposes `items`, `count`, `addToCart`, `updateQuantity`, `removeItem`, `clearCart`, `refresh`. The header's cart badge reads `count` so it stays in sync across pages. All cart fetch calls explicitly send `credentials: 'include'` so the httpOnly `session` cookie is attached to same-origin requests (required for the API's `getSession()` to authenticate the user).
 
 ## Env
 - `DATABASE_URL` — Neon pooled connection string (set on Vercel)

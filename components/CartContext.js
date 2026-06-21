@@ -17,7 +17,7 @@ export function CartProvider({ children }) {
     }
     setLoading(true);
     try {
-      const res = await fetch('/api/cart');
+      const res = await fetch('/api/cart', { credentials: 'include' });
       if (res.ok) {
         const data = await res.json();
         setItems(data.items || []);
@@ -42,6 +42,7 @@ export function CartProvider({ children }) {
     const res = await fetch('/api/cart', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({ productId, quantity }),
     });
     if (!res.ok) {
@@ -55,6 +56,7 @@ export function CartProvider({ children }) {
     const res = await fetch(`/api/cart/${itemId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({ quantity }),
     });
     if (!res.ok) {
@@ -65,7 +67,7 @@ export function CartProvider({ children }) {
   };
 
   const removeItem = async (itemId) => {
-    const res = await fetch(`/api/cart/${itemId}`, { method: 'DELETE' });
+    const res = await fetch(`/api/cart/${itemId}`, { method: 'DELETE', credentials: 'include' });
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
       throw new Error(err.error || 'Failed to remove item');
@@ -74,7 +76,7 @@ export function CartProvider({ children }) {
   };
 
   const clearCart = async () => {
-    const res = await fetch('/api/cart', { method: 'DELETE' });
+    const res = await fetch('/api/cart', { method: 'DELETE', credentials: 'include' });
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
       throw new Error(err.error || 'Failed to clear cart');
