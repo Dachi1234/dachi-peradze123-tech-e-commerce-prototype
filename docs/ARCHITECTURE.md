@@ -14,7 +14,7 @@ Dark minimal theme across every page (per Nino's Figma). Tokens used everywhere:
 - Text: primary `#ffffff`, secondary `gray-400`, placeholder `gray-500`
 - Accent / primary CTA: `blue-500` (`#3b82f6`)
 - Category badge: bg `green-950`, text `green-400`
-- Star ratings: `amber-500`
+- Star ratings: `amber-500` filled, `amber-900` (dark amber tint) for empty positions so the 5-star row keeps a consistent silhouette even when a product has no ratings yet
 Rounded corners use `rounded-xl` for cards / `rounded-lg` for buttons & inputs. No light backgrounds remain.
 
 ## Data model (`lib/schema.js`)
@@ -26,15 +26,15 @@ Rounded corners use `rounded-xl` for cards / `rounded-lg` for buttons & inputs. 
 All foreign keys cascade on delete. Migrations live in `drizzle/0000_initial.sql`, `0001_add_users_auth.sql`, `0002_add_cart.sql` and are applied by `lib/migrate.js` (uses `drizzle-orm/neon-http/migrator`) before each `next build`. `lib/seed.js` seeds the product catalog (idempotent).
 
 ## Routes / pages
-- `app/page.js` — homepage. Dark grid of clickable product cards (image on top with overlay green category badge, name + stars + price below); shared dark header with logo + centered search + Login (ghost) + Cart (blue pill); category filter pills (active = blue filled, inactive = outlined). Search bar filters the visible products client-side by name/category/description.
-- `app/products/[id]/page.js` — NEW. Product details page. Dark two-column layout: large product image (left), breadcrumb (`Home / category / name`) → large white name → gray description → amber star row with avg + review count → divider → big price → specs box (parses bullets/semicolons/pipes/newlines from description) → blue full-width "Add to Cart" → ratings panel with `StarInput` wired to `/api/ratings`.
+- `app/page.js` — homepage. Dark grid of clickable product cards (image on top with overlay green category badge, name + stars + price below) using `gap-6` for generous spacing; shared dark header with logo + centered search + Login (ghost) + Cart (blue pill); category filter pills (active = blue filled, inactive = outlined). Search bar filters the visible products client-side by name/category/description.
+- `app/products/[id]/page.js` — Product details page. Dark two-column layout with `gap-16` between columns: left card holds the product image with `p-6` internal padding and `object-contain` centering so the full shot is visible; right column shows breadcrumb (`Home / category / name`) → category badge → large white name → gray description → amber star row with avg + review count → divider → big price → specs box (parses bullets/semicolons/pipes/newlines from description; `p-6`, `space-y-3` list) → blue full-width "Add to Cart" → ratings panel with `StarInput` wired to `/api/ratings`. Section vertical rhythm uses `mb-4 / mb-5 / mb-8 / my-8 / mb-6` to match Nino's Figma spacing.
 - `app/cart/page.js` — auth-gated dark cart page. List of dark item rows with qty controls, per-item remove, clear-all (inline two-step confirm: click "Clear cart" → "Yes, clear" / "Cancel" — no `window.confirm()` since headless/strict-privacy browsers suppress it), order-summary card with totals and a disabled "Checkout (coming soon)" button.
 - `app/login/page.js` — standalone dark login/register card; reads `?redirect=<path>` and bounces the user there after auth.
 - `app/profile/page.js` — dark profile page with user info card and a list of their ratings (each links to `/products/[id]`).
 
 ## Shared components
 - `components/SiteHeader.js` — single dark header reused by home, cart, product details, profile. Props: `search`, `onSearchChange`, `showSearch`.
-- `components/StarRating.js` — `StarDisplay` and `StarInput` use `amber-500` (filled) and `gray-600` (empty) for the dark theme.
+- `components/StarRating.js` — `StarDisplay` uses `amber-500` (filled) and `amber-900` filled (empty) so the 5-star silhouette is consistent across rated and unrated products. `StarInput` uses `amber-500` filled vs `gray-600` outline (interactive rating UI is intentionally clearer).
 - `components/AuthContext.js`, `components/CartContext.js`, `components/Toast.js`, `components/Providers.js` — unchanged behavior. `components/AuthModal.js` exists but is no longer mounted; `/login` is the single auth entry point.
 
 ## API endpoints
