@@ -16,7 +16,6 @@ function LoginForm() {
 
   const redirectTo = searchParams.get('redirect') || '/';
 
-  // Already logged in -> bounce to redirect target
   useEffect(() => {
     if (!authLoading && user) {
       router.push(redirectTo);
@@ -42,24 +41,24 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-md w-full max-w-md p-8">
+    <div className="min-h-screen bg-[#111111] flex items-center justify-center p-4">
+      <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl w-full max-w-md p-8">
         <div className="flex items-center justify-between mb-6">
-          <a href="/" className="text-2xl font-bold text-gray-900">
+          <a href="/" className="text-xl font-bold text-white tracking-tight">
             TechStore
           </a>
           <a
             href="/"
-            className="text-sm text-gray-500 hover:text-gray-700 transition"
+            className="text-sm text-gray-500 hover:text-gray-300 transition"
           >
             Back to store
           </a>
         </div>
 
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+        <h1 className="text-2xl font-bold text-white mb-2">
           {mode === 'login' ? 'Sign in' : 'Create an account'}
         </h1>
-        <p className="text-gray-600 mb-6 text-sm">
+        <p className="text-gray-400 mb-6 text-sm">
           {mode === 'login'
             ? 'Sign in to manage your cart and ratings.'
             : 'Register to start adding items to your cart.'}
@@ -69,7 +68,7 @@ function LoginForm() {
           <div>
             <label
               htmlFor="username"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-gray-300 mb-1.5"
             >
               Username
             </label>
@@ -78,7 +77,7 @@ function LoginForm() {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full bg-[#1e1e1e] text-white placeholder-gray-500 border border-[#2a2a2a] rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 transition"
               required
               minLength={3}
               autoComplete="username"
@@ -88,7 +87,7 @@ function LoginForm() {
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-gray-300 mb-1.5"
             >
               Password
             </label>
@@ -97,7 +96,7 @@ function LoginForm() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full bg-[#1e1e1e] text-white placeholder-gray-500 border border-[#2a2a2a] rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 transition"
               required
               minLength={6}
               autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
@@ -105,7 +104,7 @@ function LoginForm() {
           </div>
 
           {error && (
-            <div className="bg-red-50 text-red-600 px-4 py-2 rounded-lg text-sm">
+            <div className="bg-red-950/40 border border-red-900 text-red-300 px-4 py-2 rounded-lg text-sm">
               {error}
             </div>
           )}
@@ -113,7 +112,7 @@ function LoginForm() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2.5 rounded-lg transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {submitting
               ? 'Please wait...'
@@ -129,7 +128,7 @@ function LoginForm() {
               setMode(mode === 'login' ? 'register' : 'login');
               setError('');
             }}
-            className="text-green-600 hover:underline text-sm"
+            className="text-blue-400 hover:text-blue-300 text-sm transition"
           >
             {mode === 'login'
               ? "Don't have an account? Register"
@@ -145,8 +144,8 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-green-600 border-t-transparent" />
+        <div className="min-h-screen bg-[#111111] flex items-center justify-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent" />
         </div>
       }
     >
