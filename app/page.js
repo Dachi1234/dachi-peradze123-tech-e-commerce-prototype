@@ -24,7 +24,7 @@ function CategoryFilter({ selectedCategory, onCategoryChange }) {
             onClick={() => onCategoryChange(cat.id)}
             className={
               active
-                ? 'px-5 py-2 rounded-full text-sm font-medium bg-blue-500 text-white transition'
+                ? 'px-5 py-2 rounded-full text-sm font-medium bg-amber-400 text-gray-900 transition'
                 : 'px-5 py-2 rounded-full text-sm font-medium bg-transparent text-gray-300 border border-[#2a2a2a] hover:border-gray-500 hover:text-white transition'
             }
           >
@@ -147,7 +147,7 @@ export default function Home() {
     return (
       <div className="min-h-screen bg-[#111111] flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-amber-400 border-t-transparent"></div>
           <p className="mt-4 text-gray-400">Loading products...</p>
         </div>
       </div>

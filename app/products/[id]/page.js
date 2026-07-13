@@ -123,7 +123,7 @@ export default function ProductDetailsPage() {
       <div className="min-h-screen bg-[#111111]">
         <SiteHeader />
         <div className="flex items-center justify-center py-32">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent" />
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-amber-400 border-t-transparent" />
         </div>
       </div>
     );
@@ -140,7 +140,7 @@ export default function ProductDetailsPage() {
           </p>
           <a
             href="/"
-            className="inline-block bg-blue-500 hover:bg-blue-600 text-white px-5 py-2.5 rounded-lg font-medium transition"
+            className="inline-block bg-amber-400 hover:bg-amber-500 text-gray-900 px-5 py-2.5 rounded-lg font-medium transition"
           >
             Back to store
           </a>
@@ -229,7 +229,7 @@ export default function ProductDetailsPage() {
                       key={i}
                       className="text-gray-400 text-sm flex items-start gap-2"
                     >
-                      <span className="text-blue-500 mt-1">•</span>
+                      <span className="text-amber-400 mt-1">•</span>
                       <span>{s}</span>
                     </li>
                   ))}
@@ -240,7 +240,7 @@ export default function ProductDetailsPage() {
             <button
               onClick={handleAddToCart}
               disabled={adding}
-              className="w-full bg-blue-500 hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3.5 rounded-lg transition mb-6"
+              className="w-full bg-amber-400 hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed text-gray-900 font-semibold py-3.5 rounded-lg transition mb-6"
             >
               {adding ? 'Adding...' : 'Add to Cart'}
             </button>
@@ -261,7 +261,7 @@ export default function ProductDetailsPage() {
                     }
                     setShowRatingInput(true);
                   }}
-                  className="text-blue-400 hover:text-blue-300 text-sm font-medium transition"
+                  className="text-amber-400 hover:text-amber-300 text-sm font-medium transition"
                 >
                   {user ? 'Leave a rating' : 'Login to rate'}
                 </button>
@@ -272,7 +272,7 @@ export default function ProductDetailsPage() {
                     <button
                       onClick={handleSubmitRating}
                       disabled={selectedRating === 0 || submittingRating}
-                      className="bg-blue-500 hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium px-4 py-2 rounded-lg transition"
+                      className="bg-amber-400 hover:bg-amber-500 disabled:opacity-50 disabled:cursor-not-allowed text-gray-900 text-sm font-medium px-4 py-2 rounded-lg transition"
                     >
                       {submittingRating ? 'Submitting...' : 'Submit rating'}
                     </button>

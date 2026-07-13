@@ -95,7 +95,7 @@ function CartContent() {
   if (authLoading || (!user && !authLoading)) {
     return (
       <div className="min-h-screen bg-[#111111] flex items-center justify-center">
-        <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent" />
+        <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-amber-400 border-t-transparent" />
       </div>
     );
   }
@@ -139,7 +139,7 @@ function CartContent() {
 
         {loading && items.length === 0 ? (
           <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-12 text-center">
-            <div className="inline-block animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent" />
+            <div className="inline-block animate-spin rounded-full h-10 w-10 border-4 border-amber-400 border-t-transparent" />
             <p className="mt-4 text-gray-400">Loading your cart...</p>
           </div>
         ) : items.length === 0 ? (
@@ -160,7 +160,7 @@ function CartContent() {
             <p className="text-gray-300 text-lg mb-2">Your cart is empty</p>
             <a
               href="/"
-              className="inline-block mt-4 bg-blue-500 hover:bg-blue-600 text-white px-6 py-2.5 rounded-lg transition font-medium"
+              className="inline-block mt-4 bg-amber-400 hover:bg-amber-500 text-gray-900 px-6 py-2.5 rounded-lg transition font-medium"
             >
               Browse products
             </a>
@@ -230,7 +230,7 @@ function CartContent() {
               <button
                 disabled
                 title="Checkout is out of scope for this build"
-                className="w-full mt-6 bg-blue-500 text-white py-3 rounded-lg font-semibold opacity-50 cursor-not-allowed"
+                className="w-full mt-6 bg-amber-400 text-gray-900 py-3 rounded-lg font-semibold opacity-50 cursor-not-allowed"
               >
                 Checkout (coming soon)
               </button>

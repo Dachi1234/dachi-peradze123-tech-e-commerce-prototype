@@ -77,7 +77,7 @@ function LoginForm() {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full bg-[#1e1e1e] text-white placeholder-gray-500 border border-[#2a2a2a] rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 transition"
+              className="w-full bg-[#1e1e1e] text-white placeholder-gray-500 border border-[#2a2a2a] rounded-lg px-4 py-2.5 focus:outline-none focus:border-amber-400 transition"
               required
               minLength={3}
               autoComplete="username"
@@ -96,7 +96,7 @@ function LoginForm() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-[#1e1e1e] text-white placeholder-gray-500 border border-[#2a2a2a] rounded-lg px-4 py-2.5 focus:outline-none focus:border-blue-500 transition"
+              className="w-full bg-[#1e1e1e] text-white placeholder-gray-500 border border-[#2a2a2a] rounded-lg px-4 py-2.5 focus:outline-none focus:border-amber-400 transition"
               required
               minLength={6}
               autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
@@ -112,7 +112,7 @@ function LoginForm() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2.5 rounded-lg transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-amber-400 hover:bg-amber-500 text-gray-900 py-2.5 rounded-lg transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {submitting
               ? 'Please wait...'
@@ -128,7 +128,7 @@ function LoginForm() {
               setMode(mode === 'login' ? 'register' : 'login');
               setError('');
             }}
-            className="text-blue-400 hover:text-blue-300 text-sm transition"
+            className="text-amber-400 hover:text-amber-300 text-sm transition"
           >
             {mode === 'login'
               ? "Don't have an account? Register"
@@ -145,7 +145,7 @@ export default function LoginPage() {
     <Suspense
       fallback={
         <div className="min-h-screen bg-[#111111] flex items-center justify-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent" />
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-amber-400 border-t-transparent" />
         </div>
       }
     >

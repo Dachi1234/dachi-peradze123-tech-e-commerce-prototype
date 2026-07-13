@@ -51,7 +51,7 @@ export function SiteHeader({ search = '', onSearchChange, showSearch = true }) {
                   value={search}
                   onChange={(e) => onSearchChange && onSearchChange(e.target.value)}
                   placeholder="Search products..."
-                  className="w-full bg-[#1e1e1e] text-white placeholder-gray-500 text-sm pl-10 pr-4 py-2.5 rounded-lg border border-transparent focus:outline-none focus:border-[#3b82f6] transition"
+                  className="w-full bg-[#1e1e1e] text-white placeholder-gray-500 text-sm pl-10 pr-4 py-2.5 rounded-lg border border-transparent focus:outline-none focus:border-[#fbbf24] transition"
                 />
               </div>
             </div>
@@ -93,7 +93,7 @@ export function SiteHeader({ search = '', onSearchChange, showSearch = true }) {
                 }
                 router.push('/cart');
               }}
-              className="relative flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition"
+              className="relative flex items-center gap-2 bg-amber-400 hover:bg-amber-500 text-gray-900 text-sm font-medium px-4 py-2 rounded-lg transition"
               aria-label="View cart"
             >
               <svg
@@ -111,7 +111,7 @@ export function SiteHeader({ search = '', onSearchChange, showSearch = true }) {
               </svg>
               <span>Cart</span>
               {count > 0 && (
-                <span className="ml-1 bg-white/20 text-white text-xs font-bold rounded-full px-2 py-0.5">
+                <span className="ml-1 bg-gray-900/20 text-gray-900 text-xs font-bold rounded-full px-2 py-0.5">
                   {count}
                 </span>
               )}

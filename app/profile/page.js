@@ -111,7 +111,7 @@ function ProfileContent() {
     return (
       <div className="min-h-screen bg-[#111111] flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-amber-400 border-t-transparent"></div>
           <p className="mt-4 text-gray-400">Loading profile...</p>
         </div>
       </div>
@@ -143,8 +143,8 @@ function ProfileContent() {
         {/* User info */}
         <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6 mb-8">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center">
-              <span className="text-white text-2xl font-bold">
+            <div className="w-16 h-16 bg-amber-400 rounded-full flex items-center justify-center">
+              <span className="text-gray-900 text-2xl font-bold">
                 {profileData.username.charAt(0).toUpperCase()}
               </span>
             </div>
